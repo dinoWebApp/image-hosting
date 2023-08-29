@@ -9,20 +9,26 @@ const { PORT } = process.env;
 const app = express();
 const port = PORT;
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors());
 app.use('/images', express.static(path.join(__dirname, 'images')));
+
+
 
 
 const storage = multer.diskStorage({
   destination: './images/',
   filename: (req, file, cb) => {
-    const customFilename = req.body.user + '-' + Date.now() + path.extname(file.originalname);
+    const customFilename = decodeURIComponent(file.fieldname) + '-' + req.body.id + path.extname(file.originalname);
     cb(null, customFilename);
   }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 50 * 1024 * 1024 }  // 50 MB
+});
 
 
 app.listen(port, () => {
@@ -31,9 +37,20 @@ app.listen(port, () => {
 
 
 //image upload
-app.post('/upload', upload.single('image'), (req, res) => {
-  console.log(req.body.user + ' image uploaded');
-  res.send('Image uploaded successfully');
+app.post('/dpUpload', upload.any(), (req, res) => {
+  let filesInfo = [];
+  if (req.files) {
+    filesInfo = req.files.map(file => {
+      return {
+        filename: file.filename
+      };
+    });
+  }
+  res.send({
+    status : 201,
+    message : 'upload success',
+    filesInfo : filesInfo
+  });
 });
 
 
