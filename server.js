@@ -46,6 +46,7 @@ app.post('/dpUpload', upload.any(), (req, res) => {
       };
     });
   }
+  console.log(filesInfo);
   res.send({
     status : 201,
     message : 'upload success',

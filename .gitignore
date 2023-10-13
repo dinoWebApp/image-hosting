@@ -2,3 +2,4 @@ node_modules/
 .env
 images/
 .gitignore
+._.DS_Store
