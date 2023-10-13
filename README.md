@@ -8,7 +8,7 @@
 
 ## 배포 및 아키텍처
 
-<img src=./public/images/image-hosting-archImg.png>
+<img src=./public/image/image-hosting-archImg.png>
 
 - 리눅스에 nginx 웹서버 구축
 - node.js 로 실행하여 웹서버를 통해 배포
